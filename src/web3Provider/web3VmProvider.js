@@ -3,6 +3,7 @@ var uiutil = require('../helpers/uiHelper')
 var traceHelper = require('../helpers/traceHelper')
 var ethutil = require('ethereumjs-util')
 var Web3 = require('web3')
+var base58 = require('web3/lib/base58')
 
 function web3VmProvider () {
   var self = this
@@ -73,9 +74,9 @@ web3VmProvider.prototype.txWillProcess = function (self, data) {
   }
   var tx = {}
   tx.hash = self.processingHash
-  tx.from = util.hexConvert(data.getSenderAddress())
+  tx.from = base58.AddressToBase58Address(util.hexConvert(data.getSenderAddress()))
   if (data.to && data.to.length) {
-    tx.to = util.hexConvert(data.to)
+    tx.to = base58.AddressToBase58Address(util.hexConvert(data.to))
   }
   this.processingAddress = tx.to
   tx.data = util.hexConvert(data.data)
@@ -115,7 +116,7 @@ web3VmProvider.prototype.txProcessed = function (self, data) {
       topics.push('0x')
     }
     logs.push({
-      address: '0x' + log[0].toString('hex'),
+      address: base58.AddressToBase58Address('0x' + log[0].toString('hex')),
       data: '0x' + log[2].toString('hex'),
       topics: topics,
       rawVMResponse: log
@@ -126,7 +127,7 @@ web3VmProvider.prototype.txProcessed = function (self, data) {
   self.txsReceipt[self.processingHash].status = '0x' + data.vm.exception.toString(16)
 
   if (data.createdAddress) {
-    var address = util.hexConvert(data.createdAddress)
+    var address = base58.AddressToBase58Address(util.hexConvert(data.createdAddress))
     self.vmTraces[self.processingHash].return = address
     self.txsReceipt[self.processingHash].contractAddress = address
   } else if (data.vm.return) {
