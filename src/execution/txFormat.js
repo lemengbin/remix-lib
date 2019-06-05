@@ -4,6 +4,7 @@ var helper = require('./txHelper')
 var asyncJS = require('async')
 var solcLinker = require('solc/linker')
 var ethJSUtil = require('ethereumjs-util')
+var base58 = require('web3/lib/base58')
 
 module.exports = {
 
@@ -235,7 +236,7 @@ module.exports = {
             if (error) {
               return cbLibDeployed(error)
             }
-            var hexAddress = address.toString('hex')
+            var hexAddress = base58.Base58AddressToAddress(address)
             if (hexAddress.slice(0, 2) === '0x') {
               hexAddress = hexAddress.slice(2)
             }
@@ -279,7 +280,7 @@ module.exports = {
       if (err) {
         return callback(err)
       }
-      var hexAddress = address.toString('hex')
+      var hexAddress = base58.Base58AddressToAddress(address)
       if (hexAddress.slice(0, 2) === '0x') {
         hexAddress = hexAddress.slice(2)
       }
