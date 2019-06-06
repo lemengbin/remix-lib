@@ -5,6 +5,7 @@ var ethJSUtil = require('ethereumjs-util')
 var BN = ethJSUtil.BN
 var executionContext = require('./execution-context')
 var EventManager = require('../eventManager')
+var base58 = require('web3/lib/base58')
 
 class TxRunner {
   constructor (vmaccounts, api) {
@@ -94,11 +95,12 @@ class TxRunner {
     if (!account) {
       return callback('Invalid account selected')
     }
+    var hexTo = to ? base58.Base58AddressToAddress(to) : to
     var tx = new EthJSTX({
       nonce: new BN(account.nonce++),
       gasPrice: new BN(1),
       gasLimit: new BN(gasLimit, 10),
-      to: to,
+      to: hexTo,
       value: new BN(value, 10),
       data: Buffer.from(data.slice(2), 'hex')
     })
@@ -140,7 +142,8 @@ class TxRunner {
 
   runInNode (from, to, data, value, gasLimit, useCall, confirmCb, gasEstimationForceSend, promptCb, callback) {
     const self = this
-    var tx = { from: from, to: to, data: data, value: value }
+    var hexTo = to ? base58.Base58AddressToAddress(to) : to;
+    var tx = { from: base58.Base58AddressToAddress(from), to: hexTo, data: data, value: value }
 
     if (useCall) {
       tx.gas = gasLimit
