@@ -20,7 +20,8 @@ module.exports = {
     if (!callbacks.confirmationCb || !callbacks.gasEstimationForceSend || !callbacks.promptCb) {
       return finalCallback('all the callbacks must have been defined')
     }
-    var tx = { from: from, to: null, data: data, useCall: false, value: value, gasLimit: gasLimit }
+    var hexFrom = from ? base58.Base58AddressToAddress(from) : from;
+    var tx = { from: hexFrom, to: null, data: data, useCall: false, value: value, gasLimit: gasLimit }
     txRunner.rawRun(tx, callbacks.confirmationCb, callbacks.gasEstimationForceSend, callbacks.promptCb, (error, txResult) => {
       // see universaldapp.js line 660 => 700 to check possible values of txResult (error case)
       finalCallback(error, txResult)
@@ -43,7 +44,9 @@ module.exports = {
     * @param {Function} finalCallback    - last callback.
     */
   callFunction: function (from, to, data, value, gasLimit, funAbi, txRunner, callbacks, finalCallback) {
-    var tx = { from: from, to: to, data: data, useCall: false, value: value, gasLimit: gasLimit }
+    var hexFrom = from ? base58.Base58AddressToAddress(from) : from;
+    var hexTo = to ? base58.Base58AddressToAddress(to) : to;
+    var tx = { from: hexFrom, to: hexTo, data: data, useCall: false, value: value, gasLimit: gasLimit }
     txRunner.rawRun(tx, callbacks.confirmationCb, callbacks.gasEstimationForceSend, callbacks.promptCb, (error, txResult) => {
       // see universaldapp.js line 660 => 700 to check possible values of txResult (error case)
       finalCallback(error, txResult)
