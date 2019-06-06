@@ -1,5 +1,6 @@
 'use strict'
 var ethers = require('ethers')
+var base58 = require('web3/lib/base58')
 
 module.exports = {
   /**
