@@ -241,7 +241,8 @@ class TxListener {
       // first check known contract, resolve against the `runtimeBytecode` if not known
       contractName = this._resolvedContracts[tx.to]
       if (!contractName) {
-        executionContext.web3().eth.getCode(tx.to, (error, code) => {
+        var newAddress = base58.AddressToBase58Address(tx.to)
+        executionContext.web3().eth.getCode(newAddress, (error, code) => {
           if (error) return cb(error)
           if (code) {
             var contractName = this._tryResolveContract(code, contracts, false)

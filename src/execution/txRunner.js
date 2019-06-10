@@ -141,7 +141,9 @@ class TxRunner {
 
   runInNode (from, to, data, value, gasLimit, useCall, confirmCb, gasEstimationForceSend, promptCb, callback) {
     const self = this
-    var tx = { from: from, to: to, data: data, value: value }
+    var hexFrom = from ? base58.AddressToBase58Address(from) : from
+    var hexTo = to ? base58.AddressToBase58Address(to) : to
+    var tx = { from: hexFrom, to: hexTo, data: data, value: value }
 
     if (useCall) {
       tx.gas = gasLimit
