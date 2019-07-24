@@ -8,7 +8,7 @@ var codeUtil = require('../util')
 var executionContext = require('./execution-context')
 var txFormat = require('./txFormat')
 var txHelper = require('./txHelper')
-var base58 = require('web3/lib/bsae58')
+var base58 = require('web3/lib/base58')
 
 /**
   * poll web3 each 2s if web3
